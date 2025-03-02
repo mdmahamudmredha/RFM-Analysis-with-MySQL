@@ -150,7 +150,7 @@ RFM_SCORE AS
  
  -- Labeling
  
- CREATE OR REPLACE VIEW RFM_ANALYSIS AS
+ CREATE OR REPLACE VIEW RFM_ANALYSIS AS -- Best fit Labeling 
  SELECT 
  rfm_score_data.*,
  CASE 
