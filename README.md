@@ -59,11 +59,12 @@ FROM sales;
 ```
 #### Checking for Duplicates
 ```sql
-SELECT * FROM sales s1
+SELECT * 
+FROM sales s1
 WHERE EXISTS (
-    SELECT 1 FROM sales s2
-    WHERE s1.`Customer ID` = s2.`Customer ID`
-    AND s1.`Product Name` = s2.`Product Name`
+    SELECT 1 
+    FROM sales s2 
+    WHERE s1.`Customer ID` = s2.`Customer ID` AND s1.`Product Name` = s2.`Product Name` AND S1.`ORDER ID`= S2.`ORDER ID`
     GROUP BY s2.`Customer ID`
     HAVING COUNT(*) > 1
 );
