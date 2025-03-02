@@ -5,7 +5,7 @@ This document provides a detailed explanation of the SQL script used to perform 
 
 ## Video Explanation
 For a visual walkthrough of the process, refer to the following video link:  
-[YouTube Video](https://www.youtube.com/watch?v=MnBbYINMbFc)
+[YouTube Video]([https://www.youtube.com/watch?v=MnBbYINMbFc](https://youtu.be/MnBbYINMbFc?t=0&si=YNUOZQOHDGGtosOj))
 
 ## Steps in the Script
 
@@ -169,5 +169,5 @@ GROUP BY CUSTOMER_SEGMENT;
 - Modify segmentation rules based on business needs.
 - The `NTILE(5)` function divides the dataset into 5 equal groups, but this can be adjusted.
 
-For further understanding, refer to the [YouTube Video](https://www.youtube.com/watch?v=MnBbYINMbFc).
+For further understanding, refer to the [YouTube Video]([https://www.youtube.com/watch?v=MnBbYINMbFc](https://youtu.be/MnBbYINMbFc?t=0&si=YNUOZQOHDGGtosOj)).
 
