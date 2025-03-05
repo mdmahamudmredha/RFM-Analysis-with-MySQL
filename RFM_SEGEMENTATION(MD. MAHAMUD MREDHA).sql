@@ -40,7 +40,7 @@ SELECT COUNT(*) FROM sales;
 
 
 
--- PERFORM EXPLORATORY DATA ANALYSIS
+-- PERFORM EXPLORATORY DATA ANALYSIS 
 DESC sales; -- Decribe dataset
 SELECT COUNT(*) AS Total_Records FROM sales;
 
@@ -100,6 +100,92 @@ FROM sales
 GROUP BY `Customer ID`, `Customer Name`
 ORDER BY Total_Order DESC, Avg_Sales DESC) p;-- total koita row ekhane asche check korlam
 
+/*
+	Expand EDA section
+*/
+
+ -- Identifying Top & Bottom Customers
+-- 🏆 Top Spending Customer
+SELECT `Customer ID`,`Customer Name`, ROUND(SUM(Sales), 2) AS Total_Spent
+FROM sales
+GROUP BY `Customer ID`,`Customer Name`
+ORDER BY Total_Spent DESC
+LIMIT 1;
+
+-- 🏅 Lowest Spending Customer
+SELECT `Customer ID`,`Customer Name`, ROUND(SUM(Sales), 2) AS Total_Spent
+FROM sales
+GROUP BY `Customer ID`,`Customer Name`
+ORDER BY Total_Spent ASC
+LIMIT 1;
+
+
+-- 5️⃣ Most & Least Sold Products
+-- 📈 Best-Selling Product
+SELECT `Product Name`, COUNT(*) AS Total_Sales
+FROM sales
+GROUP BY `Product Name`
+ORDER BY Total_Sales DESC
+LIMIT 1;
+
+-- 📉 Least Sold Product
+SELECT `Product Name`, COUNT(*) AS Total_Sales
+FROM sales
+GROUP BY `Product Name`
+ORDER BY Total_Sales ASC
+LIMIT 1;
+
+-- 6️⃣ Sales Distribution by Region
+SELECT `Region`, COUNT(*) AS Total_Orders, ROUND(SUM(Sales), 2) AS Total_Sales
+FROM sales
+GROUP BY `Region`
+ORDER BY Total_Sales DESC;
+
+-- 7️⃣ Sales Performance by Manager
+SELECT `Manager`, ROUND(SUM(Sales), 2) AS Total_Sales
+FROM sales
+GROUP BY `Manager`
+ORDER BY Total_Sales DESC;
+
+-- 8️⃣ Customers Who Returned Products
+SELECT `Customer ID`,`Customer Name`, COUNT(*) AS Total_Returns
+FROM sales
+WHERE `Return Status` = 'Returned'
+GROUP BY `Customer ID`,`Customer Name`
+ORDER BY Total_Returns DESC;
+
+
+-- 9️⃣ Regional Sales in Descending Order
+SELECT `Region`, ROUND(SUM(Sales), 2) AS Total_Sales
+FROM sales
+GROUP BY `Region`
+ORDER BY Total_Sales DESC;
+
+-- 🕐 Yearly Sales Performance
+SELECT YEAR(Formated_Order_Date) AS Year, ROUND(SUM(Sales), 2) AS Total_Sales
+FROM sales
+GROUP BY Year
+ORDER BY Year;
+
+-- 1️⃣1️⃣ Monthly Sales Performance
+SELECT YEAR(Formated_Order_Date) AS Year,
+       MONTH(Formated_Order_Date) AS Month,
+       ROUND(SUM(Sales), 2) AS Total_Sales
+FROM sales
+GROUP BY Year, Month
+ORDER BY Year, Month;
+
+-- 1️⃣2️⃣ Number of Orders per Customer
+SELECT `Customer ID`,`Customer Name`, COUNT(`Order ID`) AS Total_Orders
+FROM sales
+GROUP BY `Customer ID`,`Customer Name`
+ORDER BY Total_Orders DESC;
+
+/*
+	Expand EDA section
+*/
+
+
 SELECT MIN(Formated_Order_Date) AS FIRST_order_date FROM sales; -- 2010-01-02 FIRST order date
 SELECT MAX(Formated_Order_Date) AS last_order_date FROM sales; -- 2013-12-31 Last order date
 
@@ -150,7 +236,7 @@ RFM_SCORE AS
  
  -- Labeling
  
- CREATE OR REPLACE VIEW RFM_ANALYSIS AS -- Best fit Labeling 
+ CREATE OR REPLACE VIEW RFM_ANALYSIS AS
  SELECT 
  rfm_score_data.*,
  CASE 
