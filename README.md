@@ -65,13 +65,13 @@ FROM sales;
 This query checks for duplicate records based on Customer ID, Product Name, and Order ID.
 
 ```sql
-SELECT *
+SELECT * 
 FROM sales s1
 WHERE EXISTS (
-    SELECT 1
-    FROM sales s2
-    WHERE s1.`Customer ID` = s2.`Customer ID`
-        AND s1.`Product Name` = s2.`Product Name`
+    SELECT 1 
+    FROM sales s2 
+    WHERE s1.`Customer ID` = s2.`Customer ID` 
+        AND s1.`Product Name` = s2.`Product Name` 
         AND s1.`Order ID` = s2.`Order ID`
     GROUP BY s2.`Customer ID`
     HAVING COUNT(*) > 1
@@ -92,17 +92,18 @@ FROM sales;
 ## 4️⃣ Identifying Top & Bottom Customers
 ### 🏆 Top Spending Customer
 ```sql
-SELECT `Customer ID`, ROUND(SUM(Sales), 2) AS Total_Spent
+SELECT `Customer ID`,`Customer Name`, ROUND(SUM(Sales), 2) AS Total_Spent
 FROM sales
-GROUP BY `Customer ID`
+GROUP BY `Customer ID`,`Customer Name`
 ORDER BY Total_Spent DESC
 LIMIT 1;
 ```
+
 ### 🏅 Lowest Spending Customer
 ```sql
-SELECT `Customer ID`, ROUND(SUM(Sales), 2) AS Total_Spent
+SELECT `Customer ID`,`Customer Name`, ROUND(SUM(Sales), 2) AS Total_Spent
 FROM sales
-GROUP BY `Customer ID`
+GROUP BY `Customer ID`,`Customer Name`
 ORDER BY Total_Spent ASC
 LIMIT 1;
 ```
@@ -116,6 +117,7 @@ GROUP BY `Product Name`
 ORDER BY Total_Sales DESC
 LIMIT 1;
 ```
+
 ### 📉 Least Sold Product
 ```sql
 SELECT `Product Name`, COUNT(*) AS Total_Sales
@@ -143,13 +145,12 @@ ORDER BY Total_Sales DESC;
 
 ## 8️⃣ Customers Who Returned Products
 ```sql
-SELECT `Customer ID`, COUNT(*) AS Total_Returns
+SELECT `Customer ID`,`Customer Name`, COUNT(*) AS Total_Returns
 FROM sales
-WHERE `Return` = 'Yes'
-GROUP BY `Customer ID`
+WHERE `Return Status` = 'Returned'
+GROUP BY `Customer ID`,`Customer Name`
 ORDER BY Total_Returns DESC;
 ```
-*If there is no Return column, check for an alternative field like Order Status or Returned Order.*
 
 ## 9️⃣ Regional Sales in Descending Order
 ```sql
@@ -179,12 +180,11 @@ ORDER BY Year, Month;
 
 ## 1️⃣2️⃣ Number of Orders per Customer
 ```sql
-SELECT `Customer ID`, COUNT(`Order ID`) AS Total_Orders
+SELECT `Customer ID`,`Customer Name`, COUNT(`Order ID`) AS Total_Orders
 FROM sales
-GROUP BY `Customer ID`
+GROUP BY `Customer ID`,`Customer Name`
 ORDER BY Total_Orders DESC;
 ```
-
 
 
 ### 7. RFM Segmentation
