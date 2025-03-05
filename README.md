@@ -48,8 +48,11 @@ MODIFY COLUMN `Profit` DECIMAL(10,2) NOT NULL;
 ```
 - Ensures appropriate data types for various fields.
 
-### 6. Exploratory Data Analysis (EDA)
-#### Checking for Missing Values
+# Exploratory Data Analysis (EDA) with SQL
+
+## 1️⃣ Checking for Missing Values
+This query counts the total number of records and checks for missing values in key columns.
+
 ```sql
 SELECT COUNT(*) AS Total_Records,
     SUM(CASE WHEN Formated_Order_Date IS NULL THEN 1 ELSE 0 END) AS Missing_Order_Date,
@@ -57,19 +60,27 @@ SELECT COUNT(*) AS Total_Records,
     SUM(CASE WHEN `Customer ID` IS NULL THEN 1 ELSE 0 END) AS Missing_Customer_ID
 FROM sales;
 ```
-#### Checking for Duplicates
+
+## 2️⃣ Checking for Duplicate Records
+This query checks for duplicate records based on Customer ID, Product Name, and Order ID.
+
 ```sql
-SELECT * 
+SELECT *
 FROM sales s1
 WHERE EXISTS (
-    SELECT 1 
-    FROM sales s2 
-    WHERE s1.`Customer ID` = s2.`Customer ID` AND s1.`Product Name` = s2.`Product Name` AND S1.`ORDER ID`= S2.`ORDER ID`
+    SELECT 1
+    FROM sales s2
+    WHERE s1.`Customer ID` = s2.`Customer ID`
+        AND s1.`Product Name` = s2.`Product Name`
+        AND s1.`Order ID` = s2.`Order ID`
     GROUP BY s2.`Customer ID`
     HAVING COUNT(*) > 1
 );
 ```
-#### Calculating Key Sales Metrics
+
+## 3️⃣ Key Sales Metrics
+This query calculates minimum, maximum, average, and total sales.
+
 ```sql
 SELECT MIN(Sales) AS Min_Sales,
        MAX(Sales) AS Max_Sales,
@@ -77,6 +88,104 @@ SELECT MIN(Sales) AS Min_Sales,
        ROUND(SUM(Sales)) AS Total_Sales
 FROM sales;
 ```
+
+## 4️⃣ Identifying Top & Bottom Customers
+### 🏆 Top Spending Customer
+```sql
+SELECT `Customer ID`, ROUND(SUM(Sales), 2) AS Total_Spent
+FROM sales
+GROUP BY `Customer ID`
+ORDER BY Total_Spent DESC
+LIMIT 1;
+```
+### 🏅 Lowest Spending Customer
+```sql
+SELECT `Customer ID`, ROUND(SUM(Sales), 2) AS Total_Spent
+FROM sales
+GROUP BY `Customer ID`
+ORDER BY Total_Spent ASC
+LIMIT 1;
+```
+
+## 5️⃣ Most & Least Sold Products
+### 📈 Best-Selling Product
+```sql
+SELECT `Product Name`, COUNT(*) AS Total_Sales
+FROM sales
+GROUP BY `Product Name`
+ORDER BY Total_Sales DESC
+LIMIT 1;
+```
+### 📉 Least Sold Product
+```sql
+SELECT `Product Name`, COUNT(*) AS Total_Sales
+FROM sales
+GROUP BY `Product Name`
+ORDER BY Total_Sales ASC
+LIMIT 1;
+```
+
+## 6️⃣ Sales Distribution by Region
+```sql
+SELECT `Region`, COUNT(*) AS Total_Orders, ROUND(SUM(Sales), 2) AS Total_Sales
+FROM sales
+GROUP BY `Region`
+ORDER BY Total_Sales DESC;
+```
+
+## 7️⃣ Sales Performance by Manager
+```sql
+SELECT `Manager`, ROUND(SUM(Sales), 2) AS Total_Sales
+FROM sales
+GROUP BY `Manager`
+ORDER BY Total_Sales DESC;
+```
+
+## 8️⃣ Customers Who Returned Products
+```sql
+SELECT `Customer ID`, COUNT(*) AS Total_Returns
+FROM sales
+WHERE `Return` = 'Yes'
+GROUP BY `Customer ID`
+ORDER BY Total_Returns DESC;
+```
+*If there is no Return column, check for an alternative field like Order Status or Returned Order.*
+
+## 9️⃣ Regional Sales in Descending Order
+```sql
+SELECT `Region`, ROUND(SUM(Sales), 2) AS Total_Sales
+FROM sales
+GROUP BY `Region`
+ORDER BY Total_Sales DESC;
+```
+
+## 🕐 Yearly Sales Performance
+```sql
+SELECT YEAR(Formated_Order_Date) AS Year, ROUND(SUM(Sales), 2) AS Total_Sales
+FROM sales
+GROUP BY Year
+ORDER BY Year;
+```
+
+## 1️⃣1️⃣ Monthly Sales Performance
+```sql
+SELECT YEAR(Formated_Order_Date) AS Year,
+       MONTH(Formated_Order_Date) AS Month,
+       ROUND(SUM(Sales), 2) AS Total_Sales
+FROM sales
+GROUP BY Year, Month
+ORDER BY Year, Month;
+```
+
+## 1️⃣2️⃣ Number of Orders per Customer
+```sql
+SELECT `Customer ID`, COUNT(`Order ID`) AS Total_Orders
+FROM sales
+GROUP BY `Customer ID`
+ORDER BY Total_Orders DESC;
+```
+
+
 
 ### 7. RFM Segmentation
 The RFM model assigns a score based on:
